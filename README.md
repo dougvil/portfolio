@@ -1,69 +1,111 @@
-# React + TypeScript + Vite
+# Boilerplate: Vite + React + TypeScript + Redux Toolkit (RTK Query)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este repositório é um boilerplate destinado a acelerar a criação de aplicações front-end usando Vite, React, TypeScript e Redux Toolkit com RTK Query para chamadas a APIs.
 
-Currently, two official plugins are available:
+## Visão geral
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Stack: Vite, React 19, TypeScript, Redux Toolkit (RTK) / RTK Query, MUI (Material UI) e Emotion.
+- Objetivo: oferecer uma base pronta com configuração de bundler, TypeScript, store Redux, organização de pastas e exemplo de serviço API para uso imediato.
 
-## Expanding the ESLint configuration
+## Principais características
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Configuração pronta do Vite com React + TypeScript.
+- Integração com Redux Toolkit e exemplos de slices em `src/store/slices`.
+- Estrutura para serviços de API usando RTK Query em `src/services` (ex.: `src/services/pokemon`).
+- Providers para contexto e tema em `src/providers`.
+- Exemplo mínimo de aplicação em `src/App.tsx` e entrada em `src/main.tsx`.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Pré-requisitos
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Node.js (LTS recomendado, >= 18)
+- npm ou yarn
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Instalação
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. Clone este repositório:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+   git clone <este-repo>
+   cd VRTSRTKQ
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. Instale as dependências:
+
+   npm install
+
+3. Copie o arquivo de variáveis de ambiente de exemplo e ajuste se necessário:
+
+   cp .env.example .env
+
+   (Opcional) Ajuste a URL base da API no `.env`.
+
+## Variáveis de ambiente
+
+As variáveis de ambiente expostas ao client no Vite devem começar com `VITE_`.
+
+| Nome                    | Default                      | Descrição                                                |
+| ----------------------- | ---------------------------- | -------------------------------------------------------- |
+| `VITE_POKEAPI_BASE_URL` | `https://pokeapi.co/api/v2/` | URL base utilizada pelo serviço de exemplo `pokemonApi`. |
+
+Para alterar a origem das requisições da API de exemplo, modifique o valor em `.env`.
+
+## Scripts úteis
+
+- npm run dev: inicia o servidor de desenvolvimento (Vite)
+- npm run build: compila o projeto (TypeScript build + Vite build)
+- npm run lint: executa o ESLint
+- npm run preview: serve a build gerada pelo Vite (preview)
+
+## Estrutura do projeto
+
+Principais arquivos e pastas:
+
+- `index.html` — entrada HTML do Vite
+- `src/`
+  - `main.tsx` — ponto de entrada React
+  - `App.tsx` — componente principal
+  - `providers/` — providers como `StoreProvider.tsx` e `ThemeProvider.tsx`
+  - `services/` — serviços API (RTK Query). Exemplo: `src/services/pokemon/pokemon.ts`
+  - `store/` — configuração da store Redux e slices (`store.ts`, `store.hooks.ts`, `slices/auth`)
+
+## Exemplo: uso do RTK Query neste boilerplate
+
+O diretório `src/services/pokemon` contém um exemplo de serviço que demonstra como configurar endpoints com RTK Query. Em linhas gerais:
+
+- Defina um "api slice" com `createApi` e um `fetchBaseQuery`.
+- Declare endpoints (query/mutation) e gere hooks automáticos.
+
+Exemplo simplificado (conceito):
+
+// ...exemplo simplificado de uso
+
+No código do projeto existe um serviço pronto em `src/services/pokemon/pokemon.ts`; use-o como referência para criar novos serviços para suas APIs.
+
+## Boas práticas e convenções
+
+- Mantenha a lógica de chamadas a API dentro de `src/services`.
+- Slices do Redux em `src/store/slices`.
+- Components e pages podem ser organizados em subpastas dentro de `src/` conforme o tamanho do projeto.
+- Use `providers/` para agrupar Providers compartilhados (store, theme, auth, etc.).
+
+## Contribuição
+
+Contribuições são bem-vindas. Para contribuir:
+
+1. Abra uma issue descrevendo a sugestão.
+2. Crie um branch, aplique as mudanças e abra um pull request.
+
+## Melhorias e próximos passos sugeridos
+
+- Adicionar exemplos de testes (Jest + React Testing Library).
+- Configurar CI (GitHub Actions) com lint, build e testes.
+- Adicionar exemplos de uso de variáveis de ambiente e documentação de deploy.
+
+## Vantagens de usar este boilerplate
+
+Este boilerplate foi pensado para acelerar o início de um novo projeto front-end, oferecendo:
+
+- Setup pronto e testado com Vite e TypeScript, reduzindo tempo de configuração inicial.
+- Padrões de organização (stores, services, providers) que facilitam escalabilidade e manutenção.
+- Integração com Redux Toolkit e RTK Query para gerenciamento de estado e chamadas a API de forma eficiente (caching, invalidation, hooks automáticos).
+- Dependências modernas e alinhadas com as melhores práticas (MUI + Emotion para estilização se desejar UI pronta).
+
+Use este boilerplate como ponto de partida para projetos que precisem de uma base sólida e escalável.
