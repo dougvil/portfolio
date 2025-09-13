@@ -1,111 +1,206 @@
-# Boilerplate: Vite + React + TypeScript + Redux Toolkit (RTK Query)
+<h1 align="center">Vite + React + TypeScript + Redux Toolkit (RTK Query) Boilerplate</h1>
 
-Este repositório é um boilerplate destinado a acelerar a criação de aplicações front-end usando Vite, React, TypeScript e Redux Toolkit com RTK Query para chamadas a APIs.
+A modern front-end boilerplate powered by Vite, React 19, TypeScript, Redux Toolkit and RTK Query for data fetching, plus MUI (Material UI) + Emotion for UI.
 
-## Visão geral
+---
 
-- Stack: Vite, React 19, TypeScript, Redux Toolkit (RTK) / RTK Query, MUI (Material UI) e Emotion.
-- Objetivo: oferecer uma base pronta com configuração de bundler, TypeScript, store Redux, organização de pastas e exemplo de serviço API para uso imediato.
+## :rocket: Main Stack
 
-## Principais características
+- **Vite**
+- **React 19**
+- **TypeScript**
+- **Redux Toolkit** (Store + Slices)
+- **RTK Query** (API layer & caching)
+- **MUI (Material UI)** + **Emotion**
 
-- Configuração pronta do Vite com React + TypeScript.
-- Integração com Redux Toolkit e exemplos de slices em `src/store/slices`.
-- Estrutura para serviços de API usando RTK Query em `src/services` (ex.: `src/services/pokemon`).
-- Providers para contexto e tema em `src/providers`.
-- Exemplo mínimo de aplicação em `src/App.tsx` e entrada em `src/main.tsx`.
+---
 
-## Pré-requisitos
+## :wrench: Scripts
 
-- Node.js (LTS recomendado, >= 18)
-- npm ou yarn
+```bash
+# Development (Vite dev server)
+npm run dev
 
-## Instalação
+# Production build (TypeScript + Vite)
+npm run build
 
-1. Clone este repositório:
+# ESLint
+npm run lint
 
-   git clone <este-repo>
-   cd VRTSRTKQ
+# Preview built app
+npm run preview
+```
 
-2. Instale as dependências:
+---
 
-   npm install
+## :gear: Folder Structure
 
-3. Copie o arquivo de variáveis de ambiente de exemplo e ajuste se necessário:
+```
+.
+├─ index.html
+├─ .env.example
+├─ src/
+│  ├─ main.tsx          # React entry
+│  ├─ App.tsx           # Root component
+│  ├─ providers/        # Global providers (store, theme, etc.)
+│  │   ├─ StoreProvider.tsx
+│  │   └─ ThemeProvider.tsx
+│  ├─ store/
+│  │   ├─ store.ts      # Configure store
+│  │   ├─ store.hooks.ts
+│  │   └─ slices/       # Feature slices
+│  ├─ services/
+│  │   └─ pokemon/      # Example RTK Query service
+│  │       └─ pokemon.ts
+│  └─ assets/ (optional)
+└─ ...
+```
 
-   cp .env.example .env
+---
 
-   (Opcional) Ajuste a URL base da API no `.env`.
+## :link: Environment Variables
 
-## Variáveis de ambiente
+All variables exposed to the client must start with `VITE_`.
 
-As variáveis de ambiente expostas ao client no Vite devem começar com `VITE_`.
+| Name                    | Default                      | Description                                      |
+| ----------------------- | ---------------------------- | ------------------------------------------------ |
+| `VITE_POKEAPI_BASE_URL` | `https://pokeapi.co/api/v2/` | Base URL used by the example pokemonApi service. |
 
-| Nome                    | Default                      | Descrição                                                |
-| ----------------------- | ---------------------------- | -------------------------------------------------------- |
-| `VITE_POKEAPI_BASE_URL` | `https://pokeapi.co/api/v2/` | URL base utilizada pelo serviço de exemplo `pokemonApi`. |
+Create your own file:
 
-Para alterar a origem das requisições da API de exemplo, modifique o valor em `.env`.
+```bash
+cp .env.example .env
+```
 
-## Scripts úteis
+---
 
-- npm run dev: inicia o servidor de desenvolvimento (Vite)
-- npm run build: compila o projeto (TypeScript build + Vite build)
-- npm run lint: executa o ESLint
-- npm run preview: serve a build gerada pelo Vite (preview)
+## :zap: Example: Using RTK Query
 
-## Estrutura do projeto
+The example service lives at:
 
-Principais arquivos e pastas:
+```
+src/services/pokemon/pokemon.ts
+```
 
-- `index.html` — entrada HTML do Vite
-- `src/`
-  - `main.tsx` — ponto de entrada React
-  - `App.tsx` — componente principal
-  - `providers/` — providers como `StoreProvider.tsx` e `ThemeProvider.tsx`
-  - `services/` — serviços API (RTK Query). Exemplo: `src/services/pokemon/pokemon.ts`
-  - `store/` — configuração da store Redux e slices (`store.ts`, `store.hooks.ts`, `slices/auth`)
+It defines an API slice with `createApi`, a `fetchBaseQuery`, and endpoints which auto-generate hooks.
 
-## Exemplo: uso do RTK Query neste boilerplate
+Example usage (conceptual):
 
-O diretório `src/services/pokemon` contém um exemplo de serviço que demonstra como configurar endpoints com RTK Query. Em linhas gerais:
+```tsx
+import { useGetPokemonByNameQuery } from '@/services/pokemon/pokemon';
 
-- Defina um "api slice" com `createApi` e um `fetchBaseQuery`.
-- Declare endpoints (query/mutation) e gere hooks automáticos.
+export function Demo() {
+  const { data, isLoading, isError } = useGetPokemonByNameQuery('pikachu');
+  if (isLoading) return <span>Loading...</span>;
+  if (isError) return <span>Error</span>;
+  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+}
+```
 
-Exemplo simplificado (conceito):
+---
 
-// ...exemplo simplificado de uso
+## :hammer: How to Add a New API Service (RTK Query)
 
-No código do projeto existe um serviço pronto em `src/services/pokemon/pokemon.ts`; use-o como referência para criar novos serviços para suas APIs.
+1. Create a folder: `src/services/<domain>/`
+2. Define the API slice:
 
-## Boas práticas e convenções
+   ```ts
+   // src/services/user/user.ts
+   import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-- Mantenha a lógica de chamadas a API dentro de `src/services`.
-- Slices do Redux em `src/store/slices`.
-- Components e pages podem ser organizados em subpastas dentro de `src/` conforme o tamanho do projeto.
-- Use `providers/` para agrupar Providers compartilhados (store, theme, auth, etc.).
+   export const userApi = createApi({
+     reducerPath: 'userApi',
+     baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
+     endpoints: (builder) => ({
+       getUser: builder.query<{ id: string; name: string }, string>({
+         query: (id) => `users/${id}`,
+       }),
+     }),
+   });
 
-## Contribuição
+   export const { useGetUserQuery } = userApi;
+   ```
 
-Contribuições são bem-vindas. Para contribuir:
+3. Add the reducer & middleware to `store.ts`:
 
-1. Abra uma issue descrevendo a sugestão.
-2. Crie um branch, aplique as mudanças e abra um pull request.
+   ```ts
+   // ...existing code...
+   import { userApi } from '@/services/user/user';
+   // ...existing code...
 
-## Melhorias e próximos passos sugeridos
+   export const store = configureStore({
+     reducer: {
+       // ...existing reducers...
+       [userApi.reducerPath]: userApi.reducer,
+     },
+     middleware: (getDefault) =>
+       getDefault().concat(
+         // ...existing middleware...
+         userApi.middleware,
+       ),
+   });
+   ```
 
-- Adicionar exemplos de testes (Jest + React Testing Library).
-- Configurar CI (GitHub Actions) com lint, build e testes.
-- Adicionar exemplos de uso de variáveis de ambiente e documentação de deploy.
+4. Use the generated hook in a component:
 
-## Vantagens de usar este boilerplate
+   ```tsx
+   const { data } = useGetUserQuery('123');
+   ```
 
-Este boilerplate foi pensado para acelerar o início de um novo projeto front-end, oferecendo:
+---
 
-- Setup pronto e testado com Vite e TypeScript, reduzindo tempo de configuração inicial.
-- Padrões de organização (stores, services, providers) que facilitam escalabilidade e manutenção.
-- Integração com Redux Toolkit e RTK Query para gerenciamento de estado e chamadas a API de forma eficiente (caching, invalidation, hooks automáticos).
-- Dependências modernas e alinhadas com as melhores práticas (MUI + Emotion para estilização se desejar UI pronta).
+## :bulb: Notes
 
-Use este boilerplate como ponto de partida para projetos que precisem de uma base sólida e escalável.
+- Keep API logic inside `src/services`.
+- Keep feature-specific state inside `src/store/slices`.
+- All client-exposed env vars must be prefixed with `VITE_`.
+- Prefer hooks from `store.hooks.ts` for typed `useDispatch` / `useSelector`.
+- The example pokemon service is a reference—remove it when starting a real project.
+
+---
+
+## :memo: References
+
+- [Vite](https://vitejs.dev/)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [RTK Query](https://redux-toolkit.js.org/rtk-query/overview)
+- [MUI](https://mui.com/)
+
+---
+
+## :handshake: Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/short-description`
+3. Commit: `git commit -m "feat: add feature"`
+4. Push: `git push origin feature/short-description`
+5. Open a Pull Request
+
+Please:
+
+- Follow existing code style
+- Keep the boilerplate lean (avoid unnecessary abstractions)
+- Run `npm run lint` before submitting
+- Update docs if behavior changes
+
+---
+
+## :trophy: Why Use This Boilerplate?
+
+- Fast startup: Vite + optimized TS config
+- Scalable state model (Redux Toolkit + RTK Query caching & invalidation)
+- Clear separation (services / slices / providers)
+- Ready for theming & UI with MUI
+- Easy extension for real APIs
+
+---
+
+## :speech_balloon: Next Ideas (Optional)
+
+- Add Jest + React Testing Library
+- Add GitHub Actions (lint / test / build)
+- Add deployment docs (Vercel / Netlify / Docker)
+
+Enjoy and build fast. 🚀
