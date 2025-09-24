@@ -1,4 +1,2 @@
 name = "portfolio"
-compatibility_date = "2025-09-24" 
-[site]
-bucket = "./dist"
+pages_build_output_dir = "dist"
